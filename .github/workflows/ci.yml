@@ -56,3 +56,5 @@ jobs:
               -p 80:8000 \
               --restart always \
               mankz111/django-deploy-test:latest
+              sleep 5
+              docker exec site-django python manage.py migrate
