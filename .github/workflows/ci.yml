@@ -25,7 +25,7 @@ jobs:
       - name: Build e Push da Imagem
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./DIM/code/books
           push: true
           tags: mankz111/django-deploy-test:latest
         # ... (o job build-and-push fica igual, adiciona isto depois)
