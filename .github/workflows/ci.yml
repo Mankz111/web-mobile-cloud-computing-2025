@@ -52,6 +52,7 @@ jobs:
             # 3. Lançar o novo site
             docker run -d \
               --name site-django \
+              --network minha-rede \
               -p 80:8000 \
               --restart always \
               mankz111/django-deploy-test:latest
