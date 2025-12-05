@@ -28,3 +28,30 @@ jobs:
           context: .
           push: true
           tags: mankz111/django-deploy-test:latest
+        # ... (o job build-and-push fica igual, adiciona isto depois)
+
+  deploy:
+    needs: build-and-push  # Só corre se a imagem for criada com sucesso
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # 1. Parar contentor antigo (se existir)
+            docker stop site-django || true
+            docker rm site-django || true
+            
+            # 2. Atualizar a imagem
+            docker pull mankz111/django-deploy-test:latest
+            
+            # 3. Lançar o novo site
+            docker run -d \
+              --name site-django \
+              -p 80:8000 \
+              --restart always \
+              mankz111/django-deploy-test:latest
